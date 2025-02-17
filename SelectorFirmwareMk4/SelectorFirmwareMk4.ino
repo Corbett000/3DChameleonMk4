@@ -133,14 +133,31 @@ const byte SX1509_ADDRESS = 0x3E; // SX1509 I2C address
 SX1509 io;                        // Create an SX1509 object to be used throughout
 
 
-// defines pins numbers - 3D Chameleon Board
-#define extEnable 0
-#define extStep 1
-#define extDir 2
+// Settings on Shield
 
-#define selEnable A0
-#define selStep A1
-#define selDir A2
+// A4988 in base X (ext) 
+
+// A4988 in base Y (sel) 
+
+// X.STEP /DR (ext)
+
+// Y.STEP /DR (sel)
+
+// END STOPS Z+ (clippy)
+
+// CoolEn (trigger)
+
+// DA (s_limit)
+
+// CL (filament)
+
+#define extEnable 8
+#define extStep 2
+#define extDir 5
+
+#define selEnable 8
+#define selStep 3
+#define selDir 6
 
 #define trigger A3
 #define s_limit A4
@@ -249,6 +266,9 @@ void setup()
   pinMode(s_limit, OUTPUT);    
   pinMode(filament, OUTPUT); 
 
+  // On board debug led
+  pinMode(LED_BUILTIN, OUTPUT);
+
   // lock the selector by energizing it
   digitalWrite(selEnable, HIGH);
 
@@ -288,7 +308,10 @@ void loop()
         displayCommand(pulseCount);
         if(pulseCount>1) vibrateMotor();
       }
-      delay(400);  // each pulse is 400+ milliseconds apart 
+      digitalWrite(LED_BUILTIN, HIGH);
+      delay(50);  // each pulse is 400+ milliseconds apart 
+      digitalWrite(LED_BUILTIN, LOW);
+      delay(350);  // each pulse is 400+ milliseconds apart 
     }
     processCommand(pulseCount); // ok... execute whatever command was caught (by pulse count)
     pulseCount = 0;
